@@ -10,3 +10,14 @@ next        1K          588 uA
 source      2.2K        483 uA
 vol-up      4.7K        358 uA
 vol-down    6.8K        289 uA
+
+microcontroller:
+
+  PIC16F84A:
+    i2c: 
+      - http://saeedsolutions.blogspot.de/2012/10/pic16f84a-i2c-bit-banging-code-proteus.html
+      - http://www.phanderson.com/PIC/16C84/8574_1.html
+
+  RaspberryPi:
+    i2c: 
+      - https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c

@@ -1,0 +1,28 @@
+from here: 
+  https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
+  http://www.raspberrypi-spy.co.uk/2014/11/enabling-the-i2c-interface-on-the-raspberry-pi/
+
+sudo apt-get install python-smbus
+sudo apt-get install i2c-tools
+
+Run sudo raspi-config and follow the prompts to install i2c support for the ARM core and linux kernel
+
+/etc/modules:
+
+	i2c-bcm2708 
+	i2c-dev
+
+/etc/modprobe.d/raspi-blacklist.conf
+
+	#blacklist spi-bcm2708
+	#blacklist i2c-bcm2708
+
+/boot/config.txt
+
+	dtparam=i2c1=on
+	dtparam=i2c_arm=on
+
+
+testing:
+
+	sudo i2cdetect -y 1
