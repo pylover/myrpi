@@ -1,0 +1,12 @@
+
+
+car audio connector A:
+  pin 4 	+3.36 V
+  pin 17 	GND
+
+
+prev        470         644 uA
+next        1K          588 uA
+source      2.2K        483 uA
+vol-up      4.7K        358 uA
+vol-down    6.8K        289 uA
