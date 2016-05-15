@@ -1,23 +1,29 @@
 
 
 car audio connector A:
-  pin 4 	+3.36 V
-  pin 17 	GND
+  pin 4         +3.36 V
+  pin 17        GND
 
 
-prev        470         644 uA
-next        1K          588 uA
-source      2.2K        483 uA
-vol-up      4.7K        358 uA
-vol-down    6.8K        289 uA
+
+action          direct          current         New             Current
+1. next         470             644 uA                          583-645 uA   OK(1.8M,1.5M,470K,270K)
+2. prev         1K              588 uA          220   K         529-584 uA
+3. source       2.2K            483/500 uA      470   K         460-480 uA
+4. mute                         420 uA                          380-455 uA   OK (1.8M,1M)
+5. vol-up       4.7K            358 uA            1   M         330 	uA
+6. vol-down     6.8K            289 uA            1.8 M         258-274 uA
+7. bluetooth(Not-Used)                            6.8 M         88  	uA
 
 microcontroller:
 
   PIC16F84A:
-    i2c: 
+    i2c:
       - http://saeedsolutions.blogspot.de/2012/10/pic16f84a-i2c-bit-banging-code-proteus.html
       - http://www.phanderson.com/PIC/16C84/8574_1.html
 
   RaspberryPi:
-    i2c: 
+    i2c:
       - https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
+
+
