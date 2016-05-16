@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 """
-Controlling car audio with rasperrypi 
+Controlling car audio with raspberry-pi
 
 The schematic
 
@@ -83,12 +83,14 @@ def sleep(func):
         GPIO.output(vcc_pin, GPIO.LOW)
     return wrapper
 
+
 @sleep
 def command_next(c):
     GPIO.output(io1_pin, GPIO.HIGH)
     GPIO.output(io2_pin, GPIO.HIGH)
     GPIO.output(io3_pin, GPIO.HIGH)
     GPIO.output(io4_pin, GPIO.HIGH)
+
 
 @sleep
 def command_prev(c):
@@ -120,7 +122,7 @@ def command_not_found(c):
     print('Command not found: %s' % (c if isinstance(c, str) else '%s:%d' % c))
 
 
-def quit(*a):
+def command_quit(*a):
     reset_io_pins()
     GPIO.cleanup() # cleanup all GPIO
     sys.exit(0)
@@ -139,8 +141,8 @@ def dispatch(c):
             'mute': command_mute,
             'volup': command_volup,
             'voldown': command_voldown,
-            'quit': quit,
-            'exit': quit,
+            'quit': command_quit,
+            'exit': command_quit,
         }.get(command, command_not_found)((command, float(delay)))
     except ValueError:
         command_not_found(c)
@@ -158,7 +160,7 @@ def main():
     except:
         traceback.print_exc()
     finally:
-        quit()
+        command_quit()
 
 
 if __name__ == '__main__':
