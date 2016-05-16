@@ -2,6 +2,24 @@
 """
 Controlling car audio with rasperrypi 
 
+The schematic
+
+
+    RPI pin #33 VCC o--3.3V--------------------------------------------o -
+                        1N4148                                              Car Audio steering remote control socket
+    RPI pin #35 IO4 o---->\------<1.8M>------+       +-----------------o +
+                                             |       |
+    RPI pin #38 IO3 o---->\------<--1M>------+       |
+                                             |       |
+    RPI pin #37 IO2 o---->\------<470K>------+       |
+                                             |      /
+    RPI pin #40 IO1 o---->\------<220K>------+-----|   BC547
+                                                    \>--+
+                                                      e |
+                                                        |
+                                                        |
+    RPI pin #39 GND o-------------<3.3K>----------------+
+
 
 First of all you have to create a fifo:
 
@@ -15,9 +33,10 @@ Or:
 
     $ ./carc.py < cmd-channel.fifo
     
-AFter all, you may send the command using the fifo channel:
+After all, you may send the command using the fifo channel:
 
     $ echo "source:1" > cmd-channel.fifo
+
 
 Hope you enjoy !
 vahid.mardani@gmail.com
