@@ -1,24 +1,49 @@
 #! /usr/bin/env python3
-# tail -n +1 -f b | ./carc.py
+"""
+Controlling car audio with rasperrypi 
+
+
+First of all you have to create a fifo:
+
+    $ mkfifo cmd-channel.fifo
+
+And then run this script to listen on stdin:
+
+    $ tail -n +1 -f cmd-channel.fifo | ./carc.py
+
+Or:
+
+    $ ./carc.py < cmd-channel.fifo
+    
+AFter all, you may send the command using the fifo channel:
+
+    $ echo "source:1" > cmd-channel.fifo
+
+Hope you enjoy !
+vahid.mardani@gmail.com
+
+"""
 import RPi.GPIO as GPIO
 import time
 import sys
 import traceback
 import select
 
+__version__ = '0.1.0'
+
 io1_pin = 21  # rpi: 40   gray
 io2_pin = 26  # rpi: 37   violet
 io3_pin = 20  # rpi: 38   blue
 io4_pin = 19  # rpi: 35   green
-led_pin = 13  # rpi: 33   yellow
+vcc_pin = 13  # rpi: 33   yellow
 GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
 GPIO.setup(io1_pin, GPIO.OUT)
 GPIO.setup(io2_pin, GPIO.OUT)
 GPIO.setup(io3_pin, GPIO.OUT)
 GPIO.setup(io4_pin, GPIO.OUT)
-GPIO.setup(led_pin, GPIO.OUT)
+GPIO.setup(vcc_pin, GPIO.OUT)
 
-GPIO.output(led_pin, GPIO.LOW)
+GPIO.output(vcc_pin, GPIO.LOW)
 
 
 def reset_io_pins():
@@ -31,12 +56,12 @@ def reset_io_pins():
 def sleep(func):
     def wrapper(c):
         command, delay = c
-        GPIO.output(led_pin, GPIO.LOW)
+        GPIO.output(vcc_pin, GPIO.LOW)
         func(command)
-        GPIO.output(led_pin, GPIO.HIGH)
+        GPIO.output(vcc_pin, GPIO.HIGH)
         time.sleep(delay)
         reset_io_pins()
-        GPIO.output(led_pin, GPIO.LOW)
+        GPIO.output(vcc_pin, GPIO.LOW)
     return wrapper
 
 @sleep
