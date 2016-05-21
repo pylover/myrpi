@@ -8,4 +8,3 @@ async def worker(worker_idx, iterations):
         result += i**i
     for i in range(o):
         result -= i**i
-    return result

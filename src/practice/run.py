@@ -12,11 +12,8 @@ ITERATIONS = 600
 
 async def runner(f):
     start_time = datetime.now()
-    t = await asyncio.wait([f(i, ITERATIONS) for i in range(WORKERS)])
+    await asyncio.wait([f(i, ITERATIONS) for i in range(WORKERS)])
     return (datetime.now() - start_time).total_seconds()
-    #
-    # for i in t[0]:
-    #     assert i.result() == 0
 
 
 async def benchmark():
