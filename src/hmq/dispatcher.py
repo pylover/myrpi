@@ -1,20 +1,25 @@
-# -*- coding: utf-8 -*-
+from typing import TypeVar
+
 from hmq.listener import Listener
 from hmq.message import Message
 from pymlconf import ConfigManager
 
-__author__ = 'vahid'
+
+ConfigData = TypeVar('ConfigData', str, dict)
+ConfigFiles = TypeVar('ConfigData', str, list)
 
 
 class Dispatcher(object):
     default_config = """
     """
 
-    def __init__(self, config=None):
+    def __init__(self, config: ConfigData=None, config_files: ConfigFiles=None):
         self.config = ConfigManager(init_value=self.default_config)
         self.listeners = {}
         if config is not None:
-            self.configure(config)
+            self.config.merge(config)
+        if config_files:
+            self.config.load_files(config_files)
 
     async def dispatch(self, message: Message):
         rule = self.rules.get(message.type_)
@@ -25,9 +30,6 @@ class Dispatcher(object):
 
     def register(self, listener: Listener):
         self.listeners[listener.name] = listener
-
-    def configure(self, config):
-        self.config.merge(config)
 
     @property
     def rules(self):

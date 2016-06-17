@@ -15,6 +15,8 @@ workers:
   count: 3
   wait: .3
 
+rule_files: []
+
 """
 
 settings = DeferredConfigManager()
