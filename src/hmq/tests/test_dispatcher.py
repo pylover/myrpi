@@ -16,12 +16,11 @@ class TestDispatcher(AioTestCase):
         listener1 = Listener('test_listener1')
         listener2 = Listener('test_listener2')
         dispatcher = Dispatcher(config="""
-rules:
-  test_message_type:
-    listeners:
-      - test_listener1
-      - test_listener2
-
+            rules:
+              test_message_type:
+                listeners:
+                  - test_listener1
+                  - test_listener2
         """)
         dispatcher.register(listener1)
         dispatcher.register(listener2)
