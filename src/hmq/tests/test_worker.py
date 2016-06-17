@@ -23,9 +23,11 @@ class TestWorker(AioTestCase):
         listener2 = Listener('test_listener2')
         dispatcher = Dispatcher(config="""
             rules:
-              test_message_type:
+              test_message_type_1:
                 listeners:
                   - test_listener1
+              test_message_type_2:
+                listeners:
                   - test_listener2
         """)
         dispatcher.register(listener1)
@@ -53,17 +55,20 @@ class TestWorker(AioTestCase):
 
         async def feeder():
             for i in range(1000):
-                await dispatcher.dispatch(Message('test_message_type', data=dict(name='test_data', index=i)))
+                await dispatcher.dispatch(Message(
+                    'test_message_type_%s' % [1, 2][i % 2],
+                    data=dict(name='test_data', index=i)
+                ))
             asyncio.sleep(1)
             pool.stop()
 
-        asyncio.ensure_future(feeder())
+        feeder_future = asyncio.ensure_future(feeder())
 
-        await pool.run()
+        await asyncio.gather(pool.run(), feeder_future)
 
-        self.assertEqual(listener1_callback1_called, 1000)
-        self.assertEqual(listener1_callback2_called, 1000)
-        self.assertEqual(listener2_callback1_called, 1000)
+        self.assertEqual(listener1_callback1_called, 500)
+        self.assertEqual(listener1_callback2_called, 500)
+        self.assertEqual(listener2_callback1_called, 500)
 
 
 if __name__ == '__main__':
