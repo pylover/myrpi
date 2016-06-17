@@ -41,7 +41,13 @@ After all, you may send the command using the fifo channel:
 Hope you enjoy !
 vahid.mardani@gmail.com
 
+
+Changelog:
+
+-
+
 """
+# noinspection PyUnresolvedReferences, PyPackageRequirements
 import RPi.GPIO as GPIO
 import time
 import sys
