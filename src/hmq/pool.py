@@ -7,3 +7,6 @@ class WorkerPool(object):
 
     def __init__(self):
         self.message_queue = Queue(maxsize=settings.pool.maxsize)
+
+    async def run(self):
+        raise NotImplementedError

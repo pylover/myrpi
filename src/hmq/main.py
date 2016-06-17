@@ -1,6 +1,9 @@
+import asyncio
 from hmq.pool import WorkerPool
 
 
-async def main():
+def main():
+    loop = asyncio.get_event_loop()
     pool = WorkerPool()
-    await pool.run()
+    loop.run_until_complete(pool.run())
+
