@@ -8,8 +8,12 @@ __builtin_config = """
 
 debug: true
 
-pool:
-    maxsize: 10
+queue:
+  maxsize: 10
+
+workers:
+  count: 3
+  wait: .3
 
 """
 
