@@ -4,21 +4,21 @@ Controlling car audio with raspberry-pi
 
 The schematic
 
+    Yellow VCC   RPI pin #33 VCC o--3.3V--------------------------------------------o -
+                                     1N4148                                              Car Audio steering remote control socket
+    Green  IO #4 RPI pin #35 IO4 o---->|------<1.8M>------+       +-----------------o +
+                                                          |       |
+    Blue   IO #3 RPI pin #38 IO3 o---->|------<--1M>------+       |
+                                                          |       |
+    Violet IO #2 RPI pin #37 IO2 o---->|------<470K>------+       |
+                                                          |      /
+    Gray   IO #1 RPI pin #40 IO1 o---->|------<220K>------+-----|   BC547
+                                                                 \>--+
+                                                                   e |
+                                                                     |
+                                                                     |
+    White  GND   RPI pin #39 GND o-------------<3.3K>----------------+
 
-    RPI pin #33 VCC o--3.3V--------------------------------------------o -
-                        1N4148                                              Car Audio steering remote control socket
-    RPI pin #35 IO4 o---->\------<1.8M>------+       +-----------------o +
-                                             |       |
-    RPI pin #38 IO3 o---->\------<--1M>------+       |
-                                             |       |
-    RPI pin #37 IO2 o---->\------<470K>------+       |
-                                             |      /
-    RPI pin #40 IO1 o---->\------<220K>------+-----|   BC547
-                                                    \>--+
-                                                      e |
-                                                        |
-                                                        |
-    RPI pin #39 GND o-------------<3.3K>----------------+
 
 
 First of all you have to create a fifo:
@@ -61,7 +61,7 @@ io2_pin = 26  # rpi: 37   violet
 io3_pin = 20  # rpi: 38   blue
 io4_pin = 19  # rpi: 35   green
 vcc_pin = 13  # rpi: 33   yellow
-GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+GPIO.setmode(GPIO.BCM)  # Broadcom pin-numbering scheme
 GPIO.setup(io1_pin, GPIO.OUT)
 GPIO.setup(io2_pin, GPIO.OUT)
 GPIO.setup(io3_pin, GPIO.OUT)
