@@ -1,8 +1,7 @@
 
 import asyncio
-import pkg_resources
+from os.path import join, abspath, dirname
 
-import lirc
 
 from myrpi.compat import aiter_compat
 
@@ -38,11 +37,12 @@ class LIRCClient(object):
 
 
 if __name__ == '__main__':
+    this_dir = abspath(dirname(__file__))
+    lircrc_file = join(this_dir, 'conf', 'lircrc')
 
     async def main():
-        lircrc = '/home/vahid/.config/lircrc'
-        pkg_resources.
-        async with LIRCClient('irexec', lircrc) as client:
+
+        async with LIRCClient('irexec', lircrc_file) as client:
             async for cmd in client:
                 print(cmd)
 
