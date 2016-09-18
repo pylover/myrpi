@@ -8,17 +8,18 @@ from myrpi.compat import aiter_compat
 
 class LIRCClient(object):
 
-    def __init__(self, lircrc_file, interval=.5):
+    def __init__(self, lircrc_prog, lircrc_file, interval=.5):
+        self.lircrc_prog = lircrc_prog
         self.lircrc_file = lircrc_file
         self.interval = interval
 
     # Asynchronous Context Manager
-    def __aenter__(self):
-        self.lirc_socket_id = lirc.init(config_filename=self.lircrc_file, blocking=False)
+    async def __aenter__(self):
+        self.lirc_socket_id = lirc.init(self.lircrc_prog, config_filename=self.lircrc_file, blocking=False)
         asyncio.sleep(.1)
         return self
 
-    def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         lirc.deinit()
         asyncio.sleep(.1)
 
@@ -38,8 +39,8 @@ class LIRCClient(object):
 if __name__ == '__main__':
 
     async def main():
-        lircrc = ''
-        async with LIRCClient(lircrc) as client:
+        lircrc = '/home/vahid/.config/lircrc'
+        async with LIRCClient('irexec', lircrc) as client:
             async for cmd in client:
                 print(cmd)
 

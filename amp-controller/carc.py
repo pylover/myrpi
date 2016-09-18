@@ -135,9 +135,12 @@ def command_quit(*a):
 
 
 def dispatch(c):
+    print('.', end='')
     c = c.strip().lower()
     if not c:
         return
+    print("Handling command:", c)
+
     try:
         command, delay = c.split(':')
         {
@@ -157,9 +160,11 @@ def dispatch(c):
 def main():
     f = sys.stdin
     try:
-        while True:
-            r = select.select([f], [], [])[0]
-            dispatch(r[0].readline())
+        for l in f:
+            dispatch(l)
+#        while True:
+#            r = select.select([f], [], [])[0]
+#            dispatch(r[0].readline())
 
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
         print('CTRL+C is pressed.')
