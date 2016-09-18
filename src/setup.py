@@ -19,4 +19,6 @@ setup(
     version=package_version,
     install_requires=dependencies,
     packages=find_packages(),
+    include_package_data=True,
+    # exclude_package_data=None
 )

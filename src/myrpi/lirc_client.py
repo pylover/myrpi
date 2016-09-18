@@ -1,5 +1,6 @@
 
 import asyncio
+import pkg_resources
 
 import lirc
 
@@ -40,6 +41,7 @@ if __name__ == '__main__':
 
     async def main():
         lircrc = '/home/vahid/.config/lircrc'
+        pkg_resources.
         async with LIRCClient('irexec', lircrc) as client:
             async for cmd in client:
                 print(cmd)

@@ -1,0 +1,8 @@
+
+
+begin
+  prog                  = CAR_AMP
+  remote                = CREATIVE_INFRA
+  button                = MENU
+  config                = power
+end
