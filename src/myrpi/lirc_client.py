@@ -13,12 +13,14 @@ class LIRCClient(object):
         self.interval = interval
 
     # Asynchronous Context Manager
-    async def __aenter__(self):
+    def __aenter__(self):
         self.lirc_socket_id = lirc.init(config_filename=self.lircrc_file, blocking=False)
+        asyncio.sleep(.1)
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    def __aexit__(self, exc_type, exc_val, exc_tb):
         lirc.deinit()
+        asyncio.sleep(.1)
 
     # Asynchronous Iterator
     @aiter_compat
