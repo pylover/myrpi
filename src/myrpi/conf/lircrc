@@ -1,8 +1,9 @@
 
-
 begin
   prog                  = CAR_AMP
   remote                = CREATIVE_INFRA
-  button                = MENU
+  button                = KEY_MENU
+  repeat                = 1
+  delay                 = 0
   config                = power
 end

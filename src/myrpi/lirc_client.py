@@ -2,13 +2,14 @@
 import asyncio
 from os.path import join, abspath, dirname
 
+import lirc
 
 from myrpi.compat import aiter_compat
 
 
 class LIRCClient(object):
 
-    def __init__(self, lircrc_prog, lircrc_file, interval=.5):
+    def __init__(self, lircrc_prog, lircrc_file, interval=.1):
         self.lircrc_prog = lircrc_prog
         self.lircrc_file = lircrc_file
         self.interval = interval
@@ -20,8 +21,8 @@ class LIRCClient(object):
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
+        print('Cleanup')
         lirc.deinit()
-        await asyncio.sleep(.1)
 
     # Asynchronous Iterator
     @aiter_compat
@@ -39,13 +40,18 @@ class LIRCClient(object):
 if __name__ == '__main__':
     this_dir = abspath(dirname(__file__))
     lircrc_file = join(this_dir, 'conf', 'lircrc')
+    print("Using lircrc file: %s" % lircrc_file)
 
     async def main():
-
-        async with LIRCClient('irexec', lircrc_file) as client:
+        async with LIRCClient('CAR_AMP', lircrc_file) as client:
             async for cmd in client:
                 print(cmd)
 
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    try:
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+    except KeyboardInterrupt:
+        print('CTRL+C detected !')
+
