@@ -1,5 +1,5 @@
 
-from os.path import exists, join
+from os.path import exists, join, dirname, abspath
 
 from pymlconf import ConfigManager
 from appdirs import user_config_dir
@@ -12,13 +12,14 @@ __builtin_config = """
 
 LIRCClient:
   emulate: true
+  lircrc_file: $(user_config_dir)s/lircrc
 
 
 """
 
 
 class Configurable(object):
-    def __init__(self):
+    def __init__(self, **kwargs):
 
         if hasattr(self, '__config_key__'):
             config_key = getattr(self, '__config_key__')
@@ -28,6 +29,8 @@ class Configurable(object):
         config = settings.get(config_key)
         if config is None:
             raise ConfigurationException('Config key %s not found.' % config_key)
+
+        config.merge(kwargs)
 
         for k, v in config.items():
             setattr(self, k, v)
@@ -55,6 +58,7 @@ def init(config=None, directories=None, files=None, force=False):
         raise ConfigurationAlreadyInitializedException("Configuration manager object is already initialized.")
 
     context = {
+        'user_config_dir': user_config_dir()
     }
 
     _settings = ConfigManager(__builtin_config, context=context)

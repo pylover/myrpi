@@ -11,10 +11,12 @@ from myrpi.configuration import Configurable, init as init_config
 
 class LIRCClient(Configurable, asyncio.Lock):
     _last_code = None
+    _cancel_capture_flag = None
     emulate = None
     lircrc_prog = None
     lircrc_file = None
-    check_interval = .3
+    capture_interval = .3
+    check_interval = .01
 
     def __init__(self, *, loop=None, **kwargs):
         Configurable.__init__(self, **kwargs)
@@ -25,8 +27,8 @@ class LIRCClient(Configurable, asyncio.Lock):
         if self.emulate:
             async def _next():
                 await asyncio.sleep(randint(10, 1000) / 1000)
-                return [['amp', 'power'], ['amp', 'source'], ['amp', 'play'], None, None][randint(0, 3)]
-            self._next_raw = _next
+                return [['amp', 'power'], ['amp', 'source'], ['amp', 'play'], []][randint(0, 2)]
+            self.next = _next
         else:
             self.lirc_socket_id = lirc.init(self.lircrc_prog, config_filename=self.lircrc_file, blocking=False)
             await asyncio.sleep(.1)
@@ -45,20 +47,48 @@ class LIRCClient(Configurable, asyncio.Lock):
             return code
         return None
 
+    def cancel_capture(self):
+        self._cancel_capture_flag = True
+
+    async def capture(self):
+
+        captured_code = None
+
+        if self._last_code is not None:
+            captured_code = self._last_code
+
+        while captured_code is None:
+            captured_code = await self.next()
+            if not captured_code:
+                await asyncio.sleep(self.capture_interval)
+
+        repetition = 1
+        cancel_handle = self._loop.call_later(self.capture_interval, self.cancel_capture)
+        try:
+            while not self._cancel_capture_flag:
+                code = await self.next()
+
+                if captured_code != code:
+                    cancel_handle.cancel()
+                    if code:
+                        self._last_code = code
+                    break
+
+                repetition += 1
+                await asyncio.sleep(self.check_interval)
+
+            return tuple(captured_code), repetition
+
+        finally:
+            self._cancel_capture_flag = False
+
     @aiter_compat
     def __aiter__(self):
         return self
 
     async def __anext__(self):
         while True:
-            code = await self._next_raw()
-
-            if code is None and self._last_code is None:
-                await asyncio.sleep(self.check_interval)
-                continue
-
-            self._last_code = code
-            return code
+            return await self.capture()
 
 
 if __name__ == '__main__':
