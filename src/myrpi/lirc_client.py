@@ -14,7 +14,7 @@ class LIRCClient(Configurable, asyncio.Lock):
     emulate = None
     lircrc_prog = None
     lircrc_file = None
-    check_interval = .3
+    check_interval = .05
 
     def __init__(self, *, loop=None, **kwargs):
         Configurable.__init__(self, **kwargs)
@@ -50,12 +50,16 @@ class LIRCClient(Configurable, asyncio.Lock):
         return self
 
     async def __anext__(self):
+        empty = 0
         while True:
             code = await self._next_raw()
 
-            if code is None and self._last_code is None:
-                await asyncio.sleep(self.check_interval)
-                continue
+            if code is None:
+                if self._last_code is not None:
+                    empty += 1
+                if empty < 5:
+                    await asyncio.sleep(self.check_interval)
+                    continue
 
             self._last_code = code
             return code
@@ -67,7 +71,7 @@ if __name__ == '__main__':
     print("Using lircrc file: %s" % lircrc_config_file)
 
     async def main():
-        async with LIRCClient(lircrc_prog='CAR_AMP', lircrc_file=lircrc_config_file) as client:
+        async with LIRCClient(lircrc_prog='CAR_AMP', lircrc_file=lircrc_config_file, emulate=False) as client:
             async for cmd in client:
                 print(cmd)
 
