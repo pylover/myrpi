@@ -7,11 +7,12 @@ import lirc
 from myrpi.compat import aiter_compat
 
 
-class LIRCClient(object):
+class LIRCClient(asyncio.Lock):
     _last_code = None
     _cancel_capture_flag = None
 
-    def __init__(self, lircrc_prog, lircrc_file, check_interval=.02, capture_interval=.2):
+    def __init__(self, lircrc_prog, lircrc_file, check_interval=.02, capture_interval=.2, loop=None):
+        super(LIRCClient, self).__init__(loop=loop)
         self.lircrc_prog = lircrc_prog
         self.lircrc_file = lircrc_file
         self.check_interval = check_interval
@@ -28,13 +29,12 @@ class LIRCClient(object):
         lirc.deinit()
 
     # Asynchronous Iterator
-
-    def next(self):
+    @staticmethod
+    def next():
         code = lirc.nextcode()
         if code:
             return code
         return None
-
 
     def cancel_capture(self):
         self._cancel_capture_flag = True
@@ -52,7 +52,7 @@ class LIRCClient(object):
                 await asyncio.sleep(self.capture_interval)
 
         repetition = 1
-        cancel_handle = loop.call_later(self.capture_interval, self.cancel_capture)
+        cancel_handle = self._loop.call_later(self.capture_interval, self.cancel_capture)
         try:
             while not self._cancel_capture_flag:
                 code = self.next()
@@ -73,7 +73,6 @@ class LIRCClient(object):
         finally:
             self._cancel_capture_flag = False
 
-
     @aiter_compat
     def __aiter__(self):
         return self
@@ -85,18 +84,17 @@ class LIRCClient(object):
 
 if __name__ == '__main__':
     this_dir = abspath(dirname(__file__))
-    lircrc_file = join(this_dir, 'conf', 'lircrc')
-    print("Using lircrc file: %s" % lircrc_file)
+    lircrc_config_file = join(this_dir, 'conf', 'lircrc')
+    print("Using lircrc file: %s" % lircrc_config_file)
 
     async def main():
-        async with LIRCClient('CAR_AMP', lircrc_file) as client:
+        async with LIRCClient('CAR_AMP', lircrc_config_file) as client:
             async for cmd in client:
                 print(cmd)
 
     try:
 
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+        main_loop = asyncio.get_event_loop()
+        main_loop.run_until_complete(main())
     except KeyboardInterrupt:
         print('CTRL+C detected !')
-
