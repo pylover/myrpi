@@ -5,7 +5,8 @@ from setuptools import setup, find_packages
 
 dependencies = [
     'pymlconf',
-    'python-lirc'
+    'python-lirc',
+    'appdirs'
 ]
 
 

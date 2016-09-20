@@ -1,36 +1,59 @@
 
 import asyncio
+from random import randint
 from os.path import join, abspath, dirname
 
 import lirc
 
 from myrpi.compat import aiter_compat
+from myrpi.configuration import Configurable, init as init_config
 
 
-class LIRCClient(asyncio.Lock):
+class LIRCClient(Configurable, asyncio.Lock):
     _last_code = None
     _cancel_capture_flag = None
+    capture_interval = .3
+    check_interval = .01
 
-    def __init__(self, lircrc_prog, lircrc_file, check_interval=.02, capture_interval=.2, loop=None):
-        super(LIRCClient, self).__init__(loop=loop)
-        self.lircrc_prog = lircrc_prog
-        self.lircrc_file = lircrc_file
-        self.check_interval = check_interval
-        self.capture_interval = capture_interval
+    def __init__(self, lircrc_prog, lircrc_file, check_interval=None, capture_interval=None, emulate=None, loop=None):
+        Configurable.__init__(self)
+        asyncio.Lock.__init__(self, loop=loop)
+
+        if emulate is not None:
+            self.emulate = emulate
+
+        if lircrc_prog is not None:
+            self.lircrc_prog = lircrc_prog
+
+        if lircrc_file is not None:
+            self.lircrc_file = lircrc_file
+
+        if check_interval is not None:
+            self.check_interval = check_interval
+
+        if capture_interval is not None:
+            self.capture_interval = capture_interval
 
     # Asynchronous Context Manager
     async def __aenter__(self):
-        self.lirc_socket_id = lirc.init(self.lircrc_prog, config_filename=self.lircrc_file, blocking=False)
-        await asyncio.sleep(.1)
+        if self.emulate:
+            async def _next():
+                await asyncio.sleep(randint(10, 1000) / 1000)
+                return ['power', 'source', 'play'][randint(0, 2)]
+            self.next = _next
+        else:
+            self.lirc_socket_id = lirc.init(self.lircrc_prog, config_filename=self.lircrc_file, blocking=False)
+            await asyncio.sleep(.1)
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         print('Cleanup')
-        lirc.deinit()
+        if not self.emulate:
+            lirc.deinit()
 
     # Asynchronous Iterator
     @staticmethod
-    def next():
+    async def next():
         code = lirc.nextcode()
         if code:
             return code
@@ -47,7 +70,7 @@ class LIRCClient(asyncio.Lock):
             captured_code = self._last_code
 
         while captured_code is None:
-            captured_code = self.next()
+            captured_code = await self.next()
             if not captured_code: 
                 await asyncio.sleep(self.capture_interval)
 
@@ -55,7 +78,7 @@ class LIRCClient(asyncio.Lock):
         cancel_handle = self._loop.call_later(self.capture_interval, self.cancel_capture)
         try:
             while not self._cancel_capture_flag:
-                code = self.next()
+                code = await self.next()
                 if not code:
                     await asyncio.sleep(self.check_interval)
 
@@ -93,7 +116,7 @@ if __name__ == '__main__':
                 print(cmd)
 
     try:
-
+        init_config()
         main_loop = asyncio.get_event_loop()
         main_loop.run_until_complete(main())
     except KeyboardInterrupt:
