@@ -13,6 +13,7 @@ class LIRCdLauncher(ConfiguredLauncher):
         return parser
 
     async def launch(self):
+        from myrpi.car_audio import RPIGPIOContext
 
         dispatcher = Dispatcher(
             settings.lirc.lircrc_file,
@@ -22,4 +23,5 @@ class LIRCdLauncher(ConfiguredLauncher):
             empty_skip=settings.lirc.empty_skip
         )
 
-        return await dispatcher.capture()
+        async with dispatcher, RPIGPIOContext():
+            return await dispatcher.capture()
