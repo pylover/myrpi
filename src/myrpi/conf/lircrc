@@ -5,5 +5,5 @@ begin
   button                = KEY_MENU
   repeat                = 1
   delay                 = 0
-  config                = power
+  config                = amp power
 end
