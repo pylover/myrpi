@@ -40,7 +40,8 @@ class Launcher(object):
 # noinspection PyAbstractClass
 class ConfiguredLauncher(Launcher):
 
-    def configure(self, args):
+    @classmethod
+    def configure(cls, args):
         from myrpi.configuration import init
         init(directories=args.config_dir, files=args.config_file)
 
