@@ -5,10 +5,10 @@ from setuptools import setup, find_packages
 
 dependencies = [
     'pymlconf',
-    'python-lirc',
     'appdirs',
     'argcomplete',
-    'aiolirc'
+    'aiolirc',
+    'RPi.GPIO'
 ]
 
 

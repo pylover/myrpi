@@ -89,7 +89,7 @@ def sleep(delay):
     return decorator
 
 
-@Dispatcher.listen_for('amp power', repeat=15)
+@Dispatcher.listen_for('amp power', repeat=10)
 @sleep(LONG_DELAY)
 async def amp_power(loop):
     print('AMP Power')
@@ -106,7 +106,7 @@ async def amp_next(loop):
     GPIO.output(IO4, GPIO.HIGH)
 
 
-@Dispatcher.listen_for('amp prev', repeat=2)
+@Dispatcher.listen_for('amp previous', repeat=2)
 @sleep(SHORT_DELAY)
 async def amp_prev(loop):
     print('AMP Prev')
