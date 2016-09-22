@@ -6,7 +6,9 @@ from setuptools import setup, find_packages
 dependencies = [
     'pymlconf',
     'python-lirc',
-    'appdirs'
+    'appdirs',
+    'argcomplete',
+    'aiolirc'
 ]
 
 
@@ -21,5 +23,9 @@ setup(
     install_requires=dependencies,
     packages=find_packages(),
     include_package_data=True,
-    # exclude_package_data=None
+    entry_points={
+        'console_scripts': [
+            'myrpi = myrpi.cli:main'
+        ]
+    },
 )

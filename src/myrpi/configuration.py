@@ -1,5 +1,5 @@
 
-from os.path import exists, join, dirname, abspath
+from os.path import exists, join
 
 from pymlconf import ConfigManager
 from appdirs import user_config_dir
@@ -8,12 +8,16 @@ from myrpi.proxy import ObjectProxy
 
 _settings = None
 settings = ObjectProxy(lambda: _settings)
+
+
 __builtin_config = """
 
-LIRCClient:
-  emulate: true
+lirc:
   lircrc_file: $(user_config_dir)s/lircrc
-
+  lircrc_prog: MyRPI
+  max_stack_size: 30
+  check_interval: .1
+  empty_skip: 5
 
 """
 

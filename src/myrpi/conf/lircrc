@@ -1,6 +1,6 @@
 
 begin
-  prog                  = CAR_AMP
+  prog                  = MyRPI
   remote                = CREATIVE_INFRA
   button                = KEY_MENU
   repeat                = 1
