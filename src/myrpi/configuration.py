@@ -13,7 +13,7 @@ settings = ObjectProxy(lambda: _settings)
 __builtin_config = """
 
 lirc:
-  lircrc_file: $(user_config_dir)s/lircrc
+  lircrc_file: %(user_config_dir)s/lircrc
   lircrc_prog: MyRPI
   max_stack_size: 30
   check_interval: .1
