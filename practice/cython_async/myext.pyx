@@ -1,8 +1,8 @@
 
 from cpython.exc cimport PyErr_WarnEx
 
-
 import os
+from aiolirc.compat import aiter_compat
 
 
 __version__ = '0.1.0'
@@ -22,6 +22,7 @@ cdef class MyClass:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         print('__aexit__')
 
+    @aiter_compat
     def __aiter__(self):
         return self
 
