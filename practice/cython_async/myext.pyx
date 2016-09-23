@@ -22,9 +22,8 @@ cdef class MyClass:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         print('__aexit__')
 
-    @aiter_compat
     def __aiter__(self):
-        return self
+        return aiter_compat(self)
 
     def exists(MyClass self not None, filename):
         return os.path.exists(filename)
