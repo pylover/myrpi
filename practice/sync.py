@@ -3,7 +3,7 @@ import sys
 import lirc
 
 
-s = lirc.init('CAR_AMP', config_filename='../src/myrpi/conf/lircrc')
+s = lirc.init('myrpi', config_filename='/home/vahid/.config/lircrc')
 
 
 if __name__ == '__main__':
