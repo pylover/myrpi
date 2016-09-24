@@ -31,7 +31,7 @@ import RPi.GPIO as GPIO
 from aiolirc import listen_for
 
 
-SHORT_DELAY = .3
+SHORT_DELAY = .2
 LONG_DELAY = .7
 
 
@@ -89,14 +89,14 @@ def sleep(delay):
     return decorator
 
 
-@listen_for('amp power', repeat=10)
+@listen_for('amp power', repeat=6)
 @sleep(LONG_DELAY)
 async def amp_power(loop):
     print('AMP Power')
     GPIO.output(IO2, GPIO.HIGH)
 
 
-@listen_for('amp next', repeat=2)
+@listen_for('amp next', repeat=1)
 @sleep(SHORT_DELAY)
 async def amp_next(loop):
     print('AMP next')
@@ -106,21 +106,21 @@ async def amp_next(loop):
     GPIO.output(IO4, GPIO.HIGH)
 
 
-@listen_for('amp previous', repeat=2)
+@listen_for('amp previous', repeat=1)
 @sleep(SHORT_DELAY)
 async def amp_prev(loop):
     print('AMP Prev')
     GPIO.output(IO1, GPIO.HIGH)
 
 
-@listen_for('amp source', repeat=2)
+@listen_for('amp source', repeat=1)
 @sleep(SHORT_DELAY)
 async def amp_source(loop):
     print('AMP source')
     GPIO.output(IO2, GPIO.HIGH)
 
 
-@listen_for('amp mute', repeat=2)
+@listen_for('amp mute', repeat=1)
 @sleep(SHORT_DELAY)
 async def amp_mute(loop):
     print('AMP mute')
@@ -128,14 +128,14 @@ async def amp_mute(loop):
     GPIO.output(IO4, GPIO.HIGH)
 
 
-@listen_for('amp volume up', repeat=2)
+@listen_for('amp volume up', repeat=1)
 @sleep(SHORT_DELAY)
 async def amp_volume_up(loop):
     print('AMP Volume up')
     GPIO.output(IO3, GPIO.HIGH)
 
 
-@listen_for('amp volume down', repeat=2)
+@listen_for('amp volume down', repeat=1)
 @sleep(SHORT_DELAY)
 async def amp_volume_down(loop):
     print('AMP Volume down')
