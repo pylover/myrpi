@@ -24,12 +24,15 @@ class Launcher(object):
             self.args = args[0]
         else:
             self.args = None
-
-        if asyncio.iscoroutinefunction(self.launch):
-            loop = asyncio.get_event_loop()
-            return loop.run_until_complete(self.launch())
-        else:
-            return self.launch()
+        try:
+            if asyncio.iscoroutinefunction(self.launch):
+                loop = asyncio.get_event_loop()
+                return loop.run_until_complete(self.launch())
+            else:
+                return self.launch()
+        except KeyboardInterrupt:
+            print('CTRL+C is pressed.')
+            return 1
 
     def launch(self):
         if self.parser is None:
