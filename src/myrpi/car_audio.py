@@ -31,7 +31,7 @@ import RPi.GPIO as GPIO
 from aiolirc import listen_for
 
 
-SHORT_DELAY = .2
+SHORT_DELAY = .1
 LONG_DELAY = 1
 
 
