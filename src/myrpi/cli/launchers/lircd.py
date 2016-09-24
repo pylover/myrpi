@@ -19,6 +19,9 @@ class LIRCdLauncher(ConfiguredLauncher):
                 settings.lirc.lircrc_prog, lircrc_file=settings.lirc.lircrc_file,
                 check_interval=settings.lirc.check_interval) as client, \
                 RPIGPIOContext():
-
-            dispatcher = IRCDispatcher(client)
-            await dispatcher.listen()
+            try:
+                dispatcher = IRCDispatcher(client)
+                await dispatcher.listen()
+            except KeyboardInterrupt:
+                print('CTRL+C is pressed.')
+                return 1
