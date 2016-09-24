@@ -32,7 +32,7 @@ from aiolirc import listen_for
 
 
 SHORT_DELAY = .2
-LONG_DELAY = .8
+LONG_DELAY = 1
 
 
 IO1 = 21  # rpi: 40   gray
@@ -42,11 +42,9 @@ IO4 = 19  # rpi: 35   green
 VCC = 13  # rpi: 33   yellow
 
 
-class RPIGPIOContext(asyncio.Lock):
+class RPIGPIOContext():
 
     async def __aenter__(self):
-        # Acquiring lock
-        await super().__aenter__()
 
         # Broadcom pin-numbering scheme
         GPIO.setmode(GPIO.BCM)
@@ -64,9 +62,6 @@ class RPIGPIOContext(asyncio.Lock):
 
         # Cleanup all GPIOs
         GPIO.cleanup()
-
-        # Releasing lock
-        await super().__aexit__(exc_type, exc_val, exc_tb)
 
 
 def reset_io_pins():
@@ -89,7 +84,7 @@ def sleep(delay):
     return decorator
 
 
-@listen_for('amp power', repeat=6)
+@listen_for('amp power')
 @sleep(LONG_DELAY)
 async def amp_power(loop):
     print('AMP Power')
