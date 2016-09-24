@@ -96,7 +96,7 @@ async def amp_power(loop):
     GPIO.output(IO2, GPIO.HIGH)
 
 
-@listen_for('amp next', repeat=1)
+@listen_for('amp next')
 @sleep(SHORT_DELAY)
 async def amp_next(loop):
     print('AMP next')
@@ -106,21 +106,21 @@ async def amp_next(loop):
     GPIO.output(IO4, GPIO.HIGH)
 
 
-@listen_for('amp previous', repeat=1)
+@listen_for('amp previous')
 @sleep(SHORT_DELAY)
 async def amp_prev(loop):
     print('AMP Prev')
     GPIO.output(IO1, GPIO.HIGH)
 
 
-@listen_for('amp source', repeat=1)
+@listen_for('amp source')
 @sleep(SHORT_DELAY)
 async def amp_source(loop):
     print('AMP source')
     GPIO.output(IO2, GPIO.HIGH)
 
 
-@listen_for('amp mute', repeat=1)
+@listen_for('amp mute')
 @sleep(SHORT_DELAY)
 async def amp_mute(loop):
     print('AMP mute')
@@ -128,14 +128,14 @@ async def amp_mute(loop):
     GPIO.output(IO4, GPIO.HIGH)
 
 
-@listen_for('amp volume up', repeat=1)
+@listen_for('amp volume up')
 @sleep(SHORT_DELAY)
 async def amp_volume_up(loop):
     print('AMP Volume up')
     GPIO.output(IO3, GPIO.HIGH)
 
 
-@listen_for('amp volume down', repeat=1)
+@listen_for('amp volume down')
 @sleep(SHORT_DELAY)
 async def amp_volume_down(loop):
     print('AMP Volume down')
