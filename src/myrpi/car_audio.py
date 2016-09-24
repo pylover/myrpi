@@ -42,7 +42,7 @@ IO4 = 19  # rpi: 35   green
 VCC = 13  # rpi: 33   yellow
 
 
-class RPIGPIOContext():
+class RPIGPIOContext(object):
 
     async def __aenter__(self):
 
@@ -84,7 +84,7 @@ def sleep(delay):
     return decorator
 
 
-@listen_for('amp power')
+@listen_for('amp power', repeat=7)
 @sleep(LONG_DELAY)
 async def amp_power(loop):
     print('AMP Power')
