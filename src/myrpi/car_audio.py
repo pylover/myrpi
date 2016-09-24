@@ -32,7 +32,7 @@ from aiolirc import listen_for
 
 
 SHORT_DELAY = .2
-LONG_DELAY = .7
+LONG_DELAY = .8
 
 
 IO1 = 21  # rpi: 40   gray
