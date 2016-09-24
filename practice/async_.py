@@ -1,7 +1,7 @@
 import asyncio
 import sys
 
-from aiolirc import quickstart
+from aiolirc import quickstart, listen_for
 
 
 @listen_for('amp power', repeat=10)
