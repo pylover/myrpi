@@ -1,5 +1,5 @@
 
-from aiolirc import Dispatcher
+from aiolirc import IRCDispatcher, LIRCClient
 
 from myrpi.cli.launchers.base import ConfiguredLauncher
 from myrpi.configuration import settings
@@ -15,13 +15,10 @@ class LIRCdLauncher(ConfiguredLauncher):
     async def launch(self):
         from myrpi.car_audio import RPIGPIOContext
 
-        dispatcher = Dispatcher(
-            settings.lirc.lircrc_file,
-            settings.lirc.lircrc_prog,
-            max_stack_size=settings.lirc.max_stack_size,
-            check_interval=settings.lirc.check_interval,
-            empty_skip=settings.lirc.empty_skip
-        )
+        async with LIRCClient(
+                settings.lirc.lircrc_prog, lircrc_file=settings.lirc.lircrc_file,
+                check_interval=settings.lirc.check_interval) as client, \
+                RPIGPIOContext():
 
-        async with dispatcher, RPIGPIOContext():
-            return await dispatcher.capture()
+            dispatcher = IRCDispatcher(client)
+            await dispatcher.listen()

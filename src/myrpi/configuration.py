@@ -15,9 +15,7 @@ __builtin_config = """
 lirc:
   lircrc_file: %(user_config_dir)s/lircrc
   lircrc_prog: MyRPI
-  max_stack_size: 30
   check_interval: .1
-  empty_skip: 5
 
 """
 
