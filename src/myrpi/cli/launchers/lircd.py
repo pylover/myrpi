@@ -1,4 +1,6 @@
 
+import asyncio
+
 from aiolirc import IRCDispatcher, LIRCClient
 
 from myrpi.cli.launchers.base import ConfiguredLauncher
@@ -19,9 +21,8 @@ class LIRCdLauncher(ConfiguredLauncher):
                 settings.lirc.lircrc_prog, lircrc_file=settings.lirc.lircrc_file,
                 check_interval=settings.lirc.check_interval) as client, \
                 RPIGPIOContext():
-            try:
-                dispatcher = IRCDispatcher(client)
-                await dispatcher.listen()
-            except KeyboardInterrupt:
-                print('CTRL+C is pressed.')
-                return 1
+            dispatcher = IRCDispatcher(client)
+            result = asyncio.gather(dispatcher.listen(), return_exceptions=True)[0]
+
+        if isinstance(result, Exception):
+            raise result

@@ -8,6 +8,10 @@ async def timer(seconds):
         seconds -= 1
         if seconds <= 0:
             break
+
+        if seconds == 7998:
+            raise Exception()
+
         print('%d Seconds remaining to finish timer.' % seconds)
         await asyncio.sleep(1)
 
@@ -20,13 +24,14 @@ async def main(loop):
         print('DONE: %s' % task)
     f.add_done_callback(done)
 
-    await asyncio.sleep(1)
+    await asyncio.sleep(3)
     f.cancel()
 
     # res = await asyncio.gather(f, return_exceptions=True)
     # print(res)
 
-    res = await asyncio.wait([f])
+    res = await asyncio.gather(f, return_exceptions=True)
+
     print(res)
 
 if __name__ == '__main__':
