@@ -84,7 +84,7 @@ def sleep(delay):
     return decorator
 
 
-@listen_for('amp power', repeat=7)
+@listen_for('amp power', repeat=2)
 @sleep(LONG_DELAY)
 async def amp_power(loop):
     print('AMP Power')
