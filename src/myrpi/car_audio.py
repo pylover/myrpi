@@ -45,7 +45,7 @@ VCC = 13  # rpi: 33   yellow
 class RPIGPIOContext(object):
 
     async def __aenter__(self):
-
+        print('%s: __aenter__' % self)
         # Broadcom pin-numbering scheme
         GPIO.setmode(GPIO.BCM)
 
@@ -57,6 +57,7 @@ class RPIGPIOContext(object):
         GPIO.output(VCC, GPIO.LOW)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
+        print('%s: __aexit__' % self)
         # Cleanup all GPIOs to low
         reset_io_pins()
 

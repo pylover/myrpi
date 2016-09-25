@@ -14,7 +14,7 @@ class LIRCdLauncher(ConfiguredLauncher):
         parser = subparsers.add_parser('lircd', help="Infra-red command dispatcher daemon.")
         return parser
 
-    async def launch(self):
+    async def _launch(self):
         from myrpi.car_audio import RPIGPIOContext
 
         async with RPIGPIOContext(), LIRCClient(
@@ -26,3 +26,14 @@ class LIRCdLauncher(ConfiguredLauncher):
 
         if isinstance(result, Exception):
             raise result
+    
+    def launch(self):
+        main_loop = asyncio.get_event_loop()
+        try:
+            main_loop.run_until_complete(self._launch())
+        except KeyboardInterrupt:
+            print('__NAME__ CTRL+C pressed.')
+            return 1
+        finally:
+            if not main_loop.is_closed():
+                main_loop.close()
