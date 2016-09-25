@@ -14,16 +14,15 @@ class Context(object):
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         print('%s: __aexit__' % self.name)
 
+async def worker():
+    print('working')
+    while True:
+        await asyncio.sleep(2)
+
 
 async def main(loop):
-    async with Context('CTX1') as ctx1, Context('CTX2'):
-        try:
-            print('working')
-            while True:
-                await asyncio.sleep(1)
-        except KeyboardInterrupt:
-            print('CTRL+C pressed.')
-            return 1
+    async with Context('CTX1'), Context('CTX2'):
+        await worker()
 
 
 if __name__ == '__main__':
@@ -31,6 +30,7 @@ if __name__ == '__main__':
     try:
         sys.exit(main_loop.run_until_complete(main(main_loop)))
     except KeyboardInterrupt:
+        print('__NAME__ CTRL+C pressed.')
         sys.exit(1)
     finally:
         if not main_loop.is_closed():
