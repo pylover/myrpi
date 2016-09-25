@@ -22,7 +22,7 @@ class LIRCdLauncher(ConfiguredLauncher):
                 check_interval=settings.lirc.check_interval) as client, \
                 RPIGPIOContext():
             dispatcher = IRCDispatcher(client)
-            result = await asyncio.gather(dispatcher.listen(), return_exceptions=True)[0]
+            result = (await asyncio.gather(dispatcher.listen(), return_exceptions=True))[0]
 
         if isinstance(result, Exception):
             raise result
