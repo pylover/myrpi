@@ -21,6 +21,10 @@ The schematic
                                                                       |
     White  GND   RPI pin #39 GND  o-------------<3.3K>----------------+
 
+    Red    LED+  RPI pin #36 LED+ o--------------->|------------------+
+                                                  LED                 |
+    Brown  LED-  RPI pin #34 LED- o-----------------------------------+
+
 """
 
 import asyncio
@@ -40,6 +44,7 @@ IO2 = 26  # rpi: 37   violet
 IO3 = 20  # rpi: 38   blue
 IO4 = 19  # rpi: 35   green
 VCC = 13  # rpi: 33   yellow
+LED = 16  # rpi: 36   red
 
 
 class RPIGPIOContext(object):
@@ -54,6 +59,9 @@ class RPIGPIOContext(object):
         GPIO.setup(IO3, GPIO.OUT)
         GPIO.setup(IO4, GPIO.OUT)
         GPIO.setup(VCC, GPIO.OUT)
+        GPIO.setup(LED, GPIO.OUT)
+
+        # Turn of the circuit
         GPIO.output(VCC, GPIO.LOW)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
@@ -70,12 +78,14 @@ def reset_io_pins():
     GPIO.output(IO2, GPIO.LOW)
     GPIO.output(IO3, GPIO.LOW)
     GPIO.output(IO4, GPIO.LOW)
+    GPIO.output(LED, GPIO.LOW)
 
 
 def sleep(delay):
     def decorator(func):
         async def wrapper(*args, **kwargs):
-            GPIO.output(VCC, GPIO.LOW)
+            #GPIO.output(VCC, GPIO.LOW)
+            GPIO.output(LED, GPIO.HIGH)
             await func(*args, **kwargs)
             GPIO.output(VCC, GPIO.HIGH)
             await asyncio.sleep(delay)
