@@ -8,13 +8,13 @@ The schematic
 
     Yellow VCC   RPI pin #33 VCC  o--3.3V--------------------------------------------o -
                                       1N4148                            Car Audio steering remote control socket
-    Green  IO #4 RPI pin #35 IO#4 o---->|------<1.8M>------+       +-----------------o +
+    Green  IO#4  RPI pin #35 IO#4 o---->|------<1.8M>------+       +-----------------o +
                                                            |       |
-    Blue   IO #3 RPI pin #38 IO#3 o---->|------<--1M>------+       |
+    Blue   IO#3  RPI pin #38 IO#3 o---->|------<--1M>------+       |
                                                            |       |
-    Violet IO #2 RPI pin #37 IO#2 o---->|------<470K>------+       |
+    Violet IO#2  RPI pin #37 IO#2 o---->|------<470K>------+       |
                                                            |      /
-    Gray   IO #1 RPI pin #40 IO#1 o---->|------<220K>------+-----|   BC547
+    Gray   IO#1  RPI pin #40 IO#1 o---->|------<220K>------+-----|   BC547
                                                                   \>--+
                                                                     e |
                                                                       |
@@ -84,7 +84,6 @@ def reset_io_pins():
 def sleep(delay):
     def decorator(func):
         async def wrapper(*args, **kwargs):
-            #GPIO.output(VCC, GPIO.LOW)
             GPIO.output(LED, GPIO.HIGH)
             await func(*args, **kwargs)
             GPIO.output(VCC, GPIO.HIGH)
