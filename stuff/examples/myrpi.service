@@ -1,0 +1,11 @@
+[Unit]
+Description=MyRPi
+
+[Service]
+ExecStart=/home/vahid/.virtualenvs/myrpi/bin/myrpi --config-file /etc/myrpi/myrpi.yaml lircd
+User=vahid
+Group=vahid
+
+[Install]
+WantedBy=multi-user.target
+
